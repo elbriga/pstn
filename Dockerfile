@@ -3,6 +3,9 @@ FROM alpine:latest
 
 MAINTAINER Gabriel Ortiz Lour <gabriel@nexcore.com.br>
 
+RUN  mkdir -p /etc/asterisk
+COPY astConfs/* /etc/asterisk/
+
 RUN apk add --update asterisk \
 	&& asterisk -U asterisk \
 	&& sleep 5 \
@@ -10,7 +13,6 @@ RUN apk add --update asterisk \
 	&& pkill -9 astcanary \
 	&& sleep 2 \
 	&& rm -rf /var/run/asterisk/* \
-	&& mkdir -p /etc/asterisk \
 	&& mkdir -p /var/spool/asterisk/fax \
 	&& chown -R asterisk: /var/spool/asterisk/fax \
 	&& truncate -s 0 /var/log/asterisk/messages /var/log/asterisk/queue_log \
@@ -19,8 +21,6 @@ RUN apk add --update asterisk \
 EXPOSE 5060/udp 5060/tcp
 
 VOLUME /var/lib/asterisk/sounds /var/lib/asterisk/keys /var/lib/asterisk/phoneprov /var/spool/asterisk /var/log/asterisk
-
-COPY astConfs/* /etc/asterisk/
 
 ADD docker-entrypoint.sh /docker-entrypoint.sh
 
