@@ -3,7 +3,7 @@ FROM alpine:latest
 
 MAINTAINER Gabriel Ortiz Lour <gabriel@nexcore.com.br>
 
-RUN  mkdir -p /etc/asterisk && mkdir -p /var/lib/asterisk/moh
+RUN  mkdir -p /etc/asterisk
 COPY astConfs/* /etc/asterisk/
 
 RUN apk add --update asterisk \
@@ -22,7 +22,9 @@ EXPOSE 5060/udp 5060/tcp
 
 ADD docker-entrypoint.sh /docker-entrypoint.sh
 
-COPY sons/letItBe.mp3 /var/lib/asterisk/moh
+RUN mkdir -p /usr/lib/asterisk/moh
+COPY sons/letItBe.mp3 /usr/lib/asterisk/moh
+
 COPY sons/tt-monkeys.gsm /var/lib/asterisk/sounds
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
